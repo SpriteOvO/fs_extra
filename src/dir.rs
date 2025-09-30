@@ -90,7 +90,7 @@ impl Default for CopyOptions {
 }
 
 // Options and flags which can be used to configure how to read a directory.
-#[derive(Clone, Default)]
+#[derive(Clone, Default, Debug)]
 pub struct DirOptions {
     /// Sets levels reading. Set value 0 for read all directory folder. By default 0.
     pub depth: u64,
@@ -104,6 +104,7 @@ impl DirOptions {
 }
 
 /// A structure which include information about directory
+#[derive(Debug)]
 pub struct DirContent {
     /// Directory size in bytes.
     pub dir_size: u64,
@@ -597,22 +598,22 @@ where
         read_options.depth = options.depth;
     }
 
-    let dir_content = get_dir_content2(from, &read_options)?;
+    let dir_content = dbg!(get_dir_content2(dbg!(from), dbg!(&read_options)))?;
     for directory in dir_content.directories {
-        let tmp_to = Path::new(&directory).strip_prefix(from)?;
+        let tmp_to = dbg!(Path::new(dbg!(&directory)).strip_prefix(dbg!(from)))?;
         let dir = to.join(&tmp_to);
         if !dir.exists() {
             if options.copy_inside {
-                create_all(dir, false)?;
+                dbg!(create_all(dbg!(dir), false))?;
             } else {
-                create(dir, false)?;
+                dbg!(create(dbg!(dir), false))?;
             }
         }
     }
     let mut result: u64 = 0;
     for file in dir_content.files {
         let to = to.to_path_buf();
-        let tp = Path::new(&file).strip_prefix(from)?;
+        let tp = dbg!(Path::new(dbg!(&file)).strip_prefix(dbg!(from)))?;
         let path = to.join(&tp);
 
         let file_options = super::file::CopyOptions {

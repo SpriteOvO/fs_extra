@@ -149,6 +149,7 @@ impl From<IoError> for Error {
             IoErrorKind::Interrupted => err_kind = ErrorKind::Interrupted,
             IoErrorKind::Other => err_kind = ErrorKind::Other,
             _ => {
+                eprintln!("io error backtrace: {}", std::backtrace::Backtrace::force_capture());
                 err_kind = ErrorKind::Io(err);
                 return Error::new(err_kind, "Io error. Look inside err_kind for more details.");
             }
